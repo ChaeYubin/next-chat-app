@@ -9,6 +9,94 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+model Account {
+  // 계정의 고유 식별자
+  // @id: 이 필드를 기본키로 설정
+  // @default(auto()): 자동으로 값이 생성되도록 설정
+  // @map("_id"): NoSQL DB에서 _id 필드와 매핑됨을 나타냄
+  // @db.ObjectId: 해당 필드가 ObjectId 형식으로 데이터베이스에 저장되는 것을 나타냄
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  // 해당 계정과 연결된 사용자
+  // @relation: 'Account 모델의 userId 필드'와 'User 모델의 id 필드' 사이의 관계 정의
+  // onDelete: Cascade: 사용자가 삭제될 때 해당 사용자와 관련된 모든 계정도 함께 삭제되도록 설정
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // provider와 providerAccountId 두 필드가 함께 고유해야 함을 나타냄
+  // 즉, 동일한 제공자와 제공자 계정 ID를 가진 두 개의 계정이 중복되지 않아야 함
+  @@unique([provider, providerAccountId])
+}
+
+model User {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  accounts       Account[]
+  Session        Session[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  conversationIds String[]       @db.ObjectId
+  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
+
+  seenMessageIds String[]  @db.ObjectId
+  seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
+  Message        Message[]
+}
+
+model Session {
+  id           String   @id @default(cuid()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime @default(now())
+  lastMessageAt DateTime @default(now())
+  name          String?
+  isGroup       Boolean?
+
+  messagesIds String[]  @db.ObjectId
+  messages    Message[]
+
+  userIds String[] @db.ObjectId
+  users   User[]   @relation(fields: [userIds], references: [id])
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  body      String?
+  image     String?
+  createdAt DateTime @default(now())
+
+  seenIds String[] @db.ObjectId
+  seen    User[]   @relation("Seen", fields: [seenIds], references: [id])
+
+  conversationId String       @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  senderId String @db.ObjectId
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
