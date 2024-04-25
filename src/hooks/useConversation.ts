@@ -1,7 +1,11 @@
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
-// 현재 URL에 따라 conversationId를 반환하는 훅
+/**
+ *
+ * @returns 현재 URL에 따라 conversationId 리턴, conversationId가 있으면 isOpen이 true
+ */
+
 const useConversation = () => {
   const params = useParams();
 

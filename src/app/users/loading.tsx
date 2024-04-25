@@ -1,5 +1,7 @@
-const loading = () => {
-  return <div>loading</div>;
+import LoadingModal from "@/components/modals/LoadingModal";
+
+const Loading = () => {
+  return <LoadingModal />;
 };
 
-export default loading;
+export default Loading;
