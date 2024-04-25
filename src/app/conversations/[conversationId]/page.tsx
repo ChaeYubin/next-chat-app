@@ -3,11 +3,11 @@ import EmptyState from "@/components/EmptyState";
 import Header from "./components/Header";
 
 interface IParams {
-  conversationsId: string;
+  conversationId: string;
 }
 
 export default async function Page({ params }: { params: IParams }) {
-  const conversation = await getConversationById(params.conversationsId);
+  const conversation = await getConversationById(params.conversationId);
   // const messages = await getMessages(params.conversationId);
 
   if (!conversation) {

@@ -9,6 +9,7 @@ import { HiChevronLeft } from "react-icons/hi";
 import AvatarGroup from "../../components/AvatarGroup";
 import Avatar from "@/components/Avatar";
 import { HiEllipsisHorizontal } from "react-icons/hi2";
+import ProfileDrawer from "./ProfileDrawer";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -34,12 +35,12 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
   }, [conversation, isActive]);
 
   return (
-    // <ProfileDrawer
-    //     data={conversation}
-    //     isOpen={drawerOpen}
-    //     onClose={() => setDrawerOpen(false)}
-    //   />
     <>
+      <ProfileDrawer
+        data={conversation}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
       <div
         className="
         bg-white 

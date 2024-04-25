@@ -5,6 +5,7 @@ import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 
+// 채팅에 참여 중인 다른 유저들의 정보 가져오기
 const useOtherUser = (
   conversation: FullConversationType | { users: User[] }
 ) => {

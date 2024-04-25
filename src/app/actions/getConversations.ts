@@ -13,7 +13,7 @@ const getConversations = async () => {
   }
 
   try {
-    const conversations = await prisma?.conversation.findMany({
+    const conversations = await prisma.conversation.findMany({
       orderBy: {
         lastMessageAt: "desc",
       },
