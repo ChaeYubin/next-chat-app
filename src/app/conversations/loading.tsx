@@ -1,3 +1,5 @@
+import LoadingModal from "@/components/modals/LoadingModal";
+
 export default function Loading() {
-  return <div>loading...</div>;
+  return <LoadingModal />;
 }
