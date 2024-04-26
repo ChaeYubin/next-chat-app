@@ -20,3 +20,5 @@ const getMessages = async (conversationId: string) => {
     return [];
   }
 };
+
+export default getMessages;

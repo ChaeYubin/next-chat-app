@@ -2,6 +2,8 @@ import getConversationById from "@/app/actions/getConversationById";
 import EmptyState from "@/components/EmptyState";
 import Header from "./components/Header";
 import Form from "./components/Form";
+import Body from "./components/Body";
+import getMessages from "@/app/actions/getMessages";
 
 interface IParams {
   conversationId: string;
@@ -9,7 +11,7 @@ interface IParams {
 
 export default async function Page({ params }: { params: IParams }) {
   const conversation = await getConversationById(params.conversationId);
-  // const messages = await getMessages(params.conversationId);
+  const messages = await getMessages(params.conversationId);
 
   if (!conversation) {
     return (
@@ -25,7 +27,7 @@ export default async function Page({ params }: { params: IParams }) {
     <div className="lg:pl-80 h-full">
       <div className="h-full flex flex-col">
         <Header conversation={conversation} />
-        {/* <Body initialMessages={messages} /> */}
+        <Body initialMessages={messages} />
         <Form />
       </div>
     </div>

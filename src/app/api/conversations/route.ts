@@ -1,5 +1,6 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/libs/prismadb";
+import { pusherServer } from "@/libs/pusher";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -53,6 +54,13 @@ export async function POST(request: Request) {
       include: {
         users: true,
       },
+    });
+
+    // 새로 방을 생성했을 때, 상대방에게도 방이 바로 생기게 하기
+    newConversation.users.forEach((user) => {
+      if (user.email) {
+        pusherServer.trigger(user.email, "conversation:new", newConversation);
+      }
     });
 
     return NextResponse.json(newConversation);
