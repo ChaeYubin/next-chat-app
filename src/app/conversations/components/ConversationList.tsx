@@ -11,6 +11,7 @@ import { find } from "lodash";
 import { pusherClient } from "@/libs/pusher";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import GroupChatModal from "./GroupChatModal";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
@@ -25,7 +26,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
   const [items, setItems] = useState(initialItems);
   const { conversationId, isOpen } = useConversation();
 
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
   const session = useSession();
@@ -86,6 +87,11 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
   return (
     <>
+      <GroupChatModal
+        users={users}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       <aside
         className={clsx(
           `
@@ -107,7 +113,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
           <div className="flex justify-between pt-4 mb-4">
             <div className="text-2xl font-bold text-neutral-800">채팅 앱</div>
             <div
-              // onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsModalOpen(true)}
               className="p-2 text-gray-600 transition bg-gray-100 rounded-full cursor-pointer hover:opacity-75"
             >
               <MdOutlineGroupAdd size={20} />
